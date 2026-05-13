@@ -55,3 +55,27 @@ https://github.com/yujincheng08/BiliRoaming/wiki#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%
 Telegram: [@biliroaming](https://t.me/biliroaming)
 ### License
 [GNU General Public License, version 3](LICENSE)
+
+
+## Code Render Test
+
+  ```kotlin
+  class BiliRoamingHook : IXposedHookLoadPackage {
+      override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+          if (lpparam.packageName != "tv.danmaku.bili") return
+
+          XposedBridge.log("BiliRoaming loaded for ${lpparam.packageName}")
+      }
+  }
+  ```
+
+  ```shell
+  adb shell am force-stop tv.danmaku.bili
+  adb shell monkey -p tv.danmaku.bili 1
+  ```
+
+  ```json
+  {
+    "scope": ["tv.danmaku.bili", "com.bilibili.app.in"]
+  }
+  ```
