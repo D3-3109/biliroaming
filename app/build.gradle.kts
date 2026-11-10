@@ -11,7 +11,8 @@ plugins {
     alias(libs.plugins.lsplugin.cmaker)
 }
 
-val appVerCode = jgit.repo()?.commitCount("refs/remotes/origin/master") ?: 0
+// jgit 取不到提交数时（例如浅克隆）回退到一个合法值，versionCode=0 无法安装。
+val appVerCode = jgit.repo()?.commitCount("refs/remotes/origin/source")?.takeIf { it > 0 } ?: 1718
 val appVerName: String by rootProject
 
 apksign {
@@ -33,7 +34,7 @@ apktransform {
 cmaker {
     default {
         targets("biliroaming")
-        abiFilters("armeabi-v7a", "arm64-v8a", "x86")
+        abiFilters("arm64-v8a")
         arguments += arrayOf(
             "-DANDROID_STL=none",
             "-DCMAKE_CXX_STANDARD=23",
@@ -65,6 +66,8 @@ android {
         targetSdk = 35  // Target Android U
         versionCode = appVerCode
         versionName = appVerName
+        // 只保留 arm64，APK 内不再包含 32 位与 x86 的 .so。
+        ndk { abiFilters += "arm64-v8a" }
     }
 
     buildTypes {

@@ -91,6 +91,7 @@ class XposedInit : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     startHook { JsonHook(lpparam.classLoader) }
                     startHook { GsonHook(lpparam.classLoader) }
                     startHook { KotlinxJsonHook(lpparam.classLoader) }
+                    startHook { SplashAdRequestHook(lpparam.classLoader) }
                     startHook { ShareHook(lpparam.classLoader) }
                     startHook { AutoLikeHook(lpparam.classLoader) }
                     startHook { SettingHook(lpparam.classLoader) }
