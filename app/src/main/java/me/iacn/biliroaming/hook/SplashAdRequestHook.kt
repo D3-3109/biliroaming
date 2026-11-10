@@ -125,14 +125,16 @@ class SplashAdRequestHook(classLoader: ClassLoader) : BaseHook(classLoader) {
         private fun emptyBody(bodyClass: Class<*>, mediaTypeClass: Class<*>?): Any? = runCatching {
             val mediaType = mediaTypeClass?.let { type ->
                 type.declaredMethods.firstOrNull {
-                    it.isStatic && it.returnType == type && it.parameterCount == 1 &&
+                    java.lang.reflect.Modifier.isStatic(it.modifiers) &&
+                        it.returnType == type && it.parameterCount == 1 &&
                         it.parameterTypes[0] == String::class.java
                 }?.let { m ->
                     runCatching { m.invoke(null, "application/json; charset=utf-8") }.getOrNull()
                 }
             }
             bodyClass.declaredMethods.firstOrNull {
-                it.isStatic && it.returnType == bodyClass && it.parameterCount == 2 &&
+                java.lang.reflect.Modifier.isStatic(it.modifiers) &&
+                    it.returnType == bodyClass && it.parameterCount == 2 &&
                     it.parameterTypes[1] == String::class.java &&
                     (mediaTypeClass == null || it.parameterTypes[0] == mediaTypeClass)
             }?.let { m ->
